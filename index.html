@@ -45,21 +45,6 @@
         }
 
         canvas { display: block; width: 100% !important; height: 100% !important; }
-        
-        #loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, #2c3e50, #000000);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 1000; transition: opacity 0.8s ease;
-        }
-        .spinner {
-            width: 60px; height: 60px; border: 6px solid rgba(255,255,255,0.1);
-            border-top-color: #3498db; border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 20px;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        #loader p { color: white; font-size: 14px; letter-spacing: 3px; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
         #ui { position: absolute; top: 20px; width: 100%; text-align: center; color: #fff; pointer-events: none; z-index: 5; text-shadow: 0 2px 5px rgba(0,0,0,0.5); display: none; }
         #meters { font-size: 32px; display: block; } 
@@ -121,11 +106,6 @@
     </style>
 </head>
 <body>
-
-    <div id="loader">
-        <div class="spinner"></div>
-        <p>PREPARANDO O TRÂNSITO...</p>
-    </div>
 
     <div id="coin-display">💰 <span id="total-coins">0</span></div>
 
@@ -223,14 +203,6 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        window.addEventListener('load', () => {
-            const loader = document.getElementById('loader');
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 800);
-            }, 1000);
-        });
-
         const bgMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
         bgMusic.loop = true; bgMusic.volume = 0.3;
 
@@ -245,12 +217,10 @@
         let lastFuelSpawnScore = 0;
         const scene = new THREE.Scene();
         
-        // AJUSTE: Cores do céu mais saturadas (Deep Sky Blue)
         const daySkyColor = 0x00aaff; 
         const nightSkyColor = 0x050520; 
         
         scene.background = new THREE.Color(daySkyColor);
-        // AJUSTE: Neblina mais densa e azulada para profundidade
         scene.fog = new THREE.Fog(daySkyColor, 200, 1000);
 
         const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.5, 2000);
@@ -659,7 +629,7 @@
                 if(e.position.x > 8.8) e.userData.drift *= -1;
                 if(e.position.x < -8.8) e.userData.drift *= -1;
 
-                const eB = new THREE.Box3().setFromObject(e)>
+                const eB = new THREE.Box3().setFromObject(e);
                 if(!e.userData.comboUsed) {
                     let dist = player.position.distanceTo(e.position);
                     if(dist < 4.5 && dist > 3.0 && e.position.z > player.position.z - 2) { e.userData.comboUsed = true; comboCount++; speed += 0.5; showComboMessage(); }
